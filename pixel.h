@@ -14,6 +14,7 @@ public:
     void releaseState();
     void drop();
     void move(std::string action);
+    void rotate();
     bool judge();
     void draw(sf::Sprite tiles, sf::RenderWindow *window);
     void debug();
@@ -23,5 +24,6 @@ private:
     int Cord[4][2];
     int Cord_pre[4][2];
     int figure[4];
-    int drop_y = START_Y, move_x = START_X;
+    int drop_y = 0, move_x = 0;
+    bool rot = false;
 };

@@ -16,26 +16,22 @@ int main()
 
     sf::Clock clock;
     Pixel blue_I;
-    float timer = 0, delay = 0.5;
+    float timer = 0, delay = 0.25;
+    blue_I.setColorWithType("Blue", "Z");
+
+
 
     while (window.isOpen())
     {
+        //time setting
         float unit_time = clock.getElapsedTime().asSeconds();
         clock.restart();
-        // printf("timer:%d\n",timer);
         timer += unit_time;
 
         // Process events
         sf::Event event;
 
-        //record state
-        blue_I.setColorWithType("Blue", "Z");
-        blue_I.updateRealCoordinate();
-        if (!blue_I.judge())
-            blue_I.releaseState();
-        blue_I.recordState();
-        //std::cout << "Before" << "\n";
-
+        // Key pressed
         while (window.pollEvent(event))
         {
             // Close window: exit
@@ -47,28 +43,23 @@ int main()
                     blue_I.move("LEFT");
                 else if (event.key.code == sf::Keyboard::Right)
                     blue_I.move("RIGHT");
-                // else if (event.key.code == sf::Keyboard::Left)
-                //     blue_I.rotate()
-            // if (event.key.code == Keyboard::Up)
-            // rotate = true;
+                else if (event.key.code == sf::Keyboard::Up)
+                    blue_I.rotate();
         }
 
-        //time handler
+        // time handler
         if (timer > delay)
         {
-            blue_I.drop();
-            timer = 0;
+            blue_I.recordState();
+            blue_I.drop(), timer = 0;
+            blue_I.updateRealCoordinate();
+            if (!blue_I.judge())
+                blue_I.releaseState();
         }
-        blue_I.updateRealCoordinate();
-        if (!blue_I.judge())
-            blue_I.releaseState();
 
-        // blue_I.debug();
-        // sf::sleep(sf::seconds(0.5f));
         window.clear(sf::Color::White);
         background.setScale(600 / background.getLocalBounds().width, 800 / background.getLocalBounds().height);
         window.draw(background);
-
         blue_I.draw(tiles, &window);
 
         window.display();

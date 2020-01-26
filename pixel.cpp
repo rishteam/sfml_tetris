@@ -50,15 +50,36 @@ void Pixel::setColorWithType(std::string setcolor, std::string settype)
         if (type[i] == settype)
             for (int j = 0; j < 4; j++)
                 figure[j] = figures[i][j];
+
+    for (int i = 0; i < 4; i++)
+    {
+        Cord[i][0] = (figure[i] % 2) * EDGE_SIZE + START_X;
+        Cord[i][1] = (figure[i] / 2) * EDGE_SIZE + START_Y;
+    }
 }
 
 void Pixel::updateRealCoordinate()
 {
+    int mid_ptx = Cord[1][0], mid_pty = Cord[1][1];
     for (int i = 0; i < 4; i++)
     {
-        Cord[i][0] = (figure[i] % 2) * EDGE_SIZE + move_x;
-        Cord[i][1] = (figure[i] / 2) * EDGE_SIZE + drop_y;
+        if(rot == false)
+        {
+            Cord[i][0] = Cord[i][0] + move_x;
+            Cord[i][1] = Cord[i][1] + drop_y;
+        }
+        else
+        {
+            int x = Cord[i][1] - mid_pty;
+            int y = Cord[i][0] - mid_ptx;
+            Cord[i][0] = mid_ptx - x;
+            Cord[i][1] = mid_pty + y;
+            //printf("pre%d: %d %d\n", i, Cord[i][0], Cord[i][1]);
+        }
     }
+    rot = false;
+    move_x = 0;
+    drop_y = 0;
 }
 
 void Pixel::recordState()
@@ -75,39 +96,35 @@ void Pixel::releaseState()
     for (int i = 0; i < 4; i++)
     {
         Cord[i][0] = Cord_pre[i][0];
-    }
-
-    for (int i = 0; i < 4; i++)
-    {
-        bool check = false;
-        if (Cord[i][1] >= BOTTOM_LIMIT)
-        {
-            for (int j = 0; j < 4; j++)
-                Cord[j][1] = Cord_pre[j][1];
-        }
-        if(check)
-            break;
+        Cord[i][1] = Cord_pre[i][1];
     }
 }
 
 void Pixel::drop()
 {
-    drop_y += EDGE_SIZE;
+    drop_y = EDGE_SIZE;
 }
 
 void Pixel::move(std::string action)
 {
     if (action == "LEFT")
-        move_x -= EDGE_SIZE;
+        move_x = -EDGE_SIZE;
     else if (action == "RIGHT")
-        move_x += EDGE_SIZE;
+        move_x = EDGE_SIZE;
+}
+
+void Pixel::rotate()
+{
+    //center of rotation
+    printf("Rotate\n");
+    rot = true;
 }
 
 bool Pixel::judge()
 {
     for (int i = 0; i < 4; i++)
     {
-        if (Cord[i][0] < LEFT_LIMIT || Cord[i][0] > RIGHT_LIMIT || Cord[i][1] > BOTTOM_LIMIT)
+        if (Cord[i][0] < LEFT_LIMIT || Cord[i][0] > RIGHT_LIMIT || Cord[i][1] >= BOTTOM_LIMIT)
             return false;
     }
     return true;
@@ -115,10 +132,11 @@ bool Pixel::judge()
 
 void Pixel::draw(sf::Sprite tiles, sf::RenderWindow *window)
 {
+    // printf("after rotate:\n");
     for (int i = 0; i < 4; i++)
     {
-        // std::cout << i << ":" << Cord[i][0] << " " << Cord[i][1] << '\n';
-        tiles.setTextureRect(sf ::IntRect(color_x, color_y, 8, 8));
+        // printf("draw%d: %d %d\n", i, Cord[i][0], Cord[i][1]);
+        tiles.setTextureRect(sf::IntRect(color_x, color_y, 8, 8));
         tiles.setPosition(Cord[i][0], Cord[i][1]);
         tiles.setScale(5.f, 5.f);
         window->draw(tiles);
