@@ -15,7 +15,7 @@ S_LIB+=-lopenal32 -lvorbisenc -lvorbisfile -lvorbis -lFLAC -lm -logg
 LIBS=$(S_LIB)
 
 EXE=example
-SOURCES=main.cpp pixel.cpp
+SOURCES=main.cpp pixel.cpp canvas.cpp
 
 OBJS=$(addsuffix .o, $(basename $(notdir $(SOURCES))))
 

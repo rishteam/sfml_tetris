@@ -1,24 +1,21 @@
 #include <iostream>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+
+#include "parameter.h"
+#include "canvas.h"
 #include "pixel.h"
 
 int main()
 {
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(600, 800), "SFML window");
-    // Load a sprite to display
-    // img: https://opengameart.org/art-search?keys=tetris
-    sf::Texture t1, t2, t3;
-    t1.loadFromFile("./src/img/8_bit_tetris_pixel.png");
-    t2.loadFromFile("./src/img/back.png");
-    sf::Sprite tiles(t1), background(t2);
-
+    Canvas canvas;
     sf::Clock clock;
-    Pixel blue_I;
-    float timer = 0, delay = 0.25;
-    blue_I.setColorWithType("Blue", "Z");
-
+    Pixel pixel;
+    float timer = 0, delay = 0.3;
+    pixel.init();
+    pixel.setColorWithType("Gray", "Z");
 
 
     while (window.isOpen())
@@ -40,27 +37,42 @@ int main()
             // Key Event
             if (event.type == sf::Event::KeyPressed)
                 if (event.key.code == sf::Keyboard::Left)
-                    blue_I.move("LEFT");
+                    pixel.move("LEFT");
                 else if (event.key.code == sf::Keyboard::Right)
-                    blue_I.move("RIGHT");
+                    pixel.move("RIGHT");
                 else if (event.key.code == sf::Keyboard::Up)
-                    blue_I.rotate();
+                    pixel.rotate();
         }
 
         // time handler
         if (timer > delay)
         {
-            blue_I.recordState();
-            blue_I.drop(), timer = 0;
-            blue_I.updateRealCoordinate();
-            if (!blue_I.judge())
-                blue_I.releaseState();
+            pixel.recordState();
+            pixel.drop(), timer = 0;
+            pixel.updateRealCoordinate();
+            if (!pixel.check_x())
+            {
+                pixel.releaseState();
+            }
+            else if(!pixel.check_y() || !canvas.collision(pixel))
+            {
+                pixel.releaseState();
+                canvas.putCanvas(pixel);
+                // pixel.debug();
+                // canvas.debug();
+                //clear state
+                pixel.init();
+                srand(time(NULL));
+                int color_idx = rand() % 8;
+                srand(time(NULL));
+                int type_idx = rand() % 7;
+                pixel.setColorWithType(color[color_idx], type[type_idx]);
+            }
         }
-
         window.clear(sf::Color::White);
-        background.setScale(600 / background.getLocalBounds().width, 800 / background.getLocalBounds().height);
-        window.draw(background);
-        blue_I.draw(tiles, &window);
+        canvas.setCanvas(&window);
+        canvas.drawExist(&window);
+        canvas.drawPixel(pixel, &window);
 
         window.display();
     }

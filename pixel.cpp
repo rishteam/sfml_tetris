@@ -1,46 +1,26 @@
-#include "pixel.h"
-#include "parameter.h"
 #include <iostream>
+#include <cstring>
+#include "pixel.h"
+#include "canvas.h"
+#include "parameter.h"
 
-int Counter = 0;
-int pixel_unit[8][2] =
-    {
-        0, 0,
-        8, 0,
-        16, 0,
-        24, 0,
-        0, 8,
-        8, 8,
-        16, 8,
-        24, 8};
-
-/*
-1 2
-3 4
-5 6
-7 8
-*/
-
-int figures[7][4] =
-    {
-        1, 3, 5, 7, // I
-        2, 4, 5, 7, // Z
-        3, 5, 4, 6, // S
-        3, 5, 4, 7, // T
-        2, 3, 5, 7, // L
-        3, 5, 7, 6, // J
-        2, 3, 4, 5, // O
-};
-
+void Pixel::init()
+{
+    color_x = 0, color_y = 0;
+    memset(Cord, 0, sizeof(Cord));
+    memset(Cord_pre, 0, sizeof(Cord_pre));
+    memset(figure, 0, sizeof(figure));
+    drop_y = 0, move_x = 0;
+    rot = false;
+}
 
 void Pixel::setColorWithType(std::string setcolor, std::string settype)
 {
-    std::string color[8] = {"Blue", "Green", "Red", "Purple", "Garbage", "Brown", "Yellow", "Gray"};
-    std::string type[7] = {"I", "Z", "S", "T", "L", "J", "O"};
     for (int i = 0; i < 8; i++)
     {
         if (color[i] == setcolor)
         {
+            //std::cout << setcolor << i << '\n';
             color_x = pixel_unit[i][0];
             color_y = pixel_unit[i][1];
         }
@@ -115,38 +95,57 @@ void Pixel::move(std::string action)
 
 void Pixel::rotate()
 {
-    //center of rotation
-    printf("Rotate\n");
     rot = true;
 }
 
-bool Pixel::judge()
+bool Pixel::check_x()
 {
     for (int i = 0; i < 4; i++)
     {
-        if (Cord[i][0] < LEFT_LIMIT || Cord[i][0] > RIGHT_LIMIT || Cord[i][1] >= BOTTOM_LIMIT)
+        if (Cord[i][0] < LEFT_LIMIT || Cord[i][0] > RIGHT_LIMIT)
             return false;
     }
     return true;
 }
 
-void Pixel::draw(sf::Sprite tiles, sf::RenderWindow *window)
+bool Pixel::check_y()
 {
-    // printf("after rotate:\n");
     for (int i = 0; i < 4; i++)
     {
-        // printf("draw%d: %d %d\n", i, Cord[i][0], Cord[i][1]);
-        tiles.setTextureRect(sf::IntRect(color_x, color_y, 8, 8));
-        tiles.setPosition(Cord[i][0], Cord[i][1]);
-        tiles.setScale(5.f, 5.f);
-        window->draw(tiles);
+        if(Cord[i][1] >= BOTTOM_LIMIT)
+            return false;
     }
+    return true;
 }
+
+std::pair<int,int> Pixel::getCord(int i)
+{
+    auto ret = std::make_pair(Cord[i][0], Cord[i][1]);
+    return ret;
+}
+
+std::pair<int, int> Pixel::getColor()
+{
+    auto ret = std::make_pair(color_x, color_y);
+    return ret;
+}
+
+int Pixel::searchColorIndex()
+{
+    for(int i = 0; i < 8; i++)
+    {
+        if (color_x == pixel_unit[i][0] && color_y == pixel_unit[i][1])
+            return i;
+    }
+    return 0;
+}
+
 void Pixel::debug()
 {
     for (int i = 0; i < 4; i++)
     {
-        printf("pre:%d: %d %d\n", i, Cord_pre[i][0], Cord_pre[i][1]);
-        printf("cord:%d: %d %d\n", i, Cord[i][0], Cord[i][1]);
+        int x = getCord(i).first;
+        int y = getCord(i).second - START_Y;
+        printf("now:%d %d\n",(x/EDGE_SIZE)-1, y/EDGE_SIZE);
     }
 }
