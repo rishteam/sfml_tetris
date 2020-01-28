@@ -20,7 +20,6 @@ void Pixel::setColorWithType(std::string setcolor, std::string settype)
     {
         if (color[i] == setcolor)
         {
-            //std::cout << setcolor << i << '\n';
             color_x = pixel_unit[i][0];
             color_y = pixel_unit[i][1];
         }
@@ -54,7 +53,6 @@ void Pixel::updateRealCoordinate()
             int y = Cord[i][0] - mid_ptx;
             Cord[i][0] = mid_ptx - x;
             Cord[i][1] = mid_pty + y;
-            //printf("pre%d: %d %d\n", i, Cord[i][0], Cord[i][1]);
         }
     }
     rot = false;
@@ -144,8 +142,8 @@ void Pixel::debug()
 {
     for (int i = 0; i < 4; i++)
     {
-        int x = getCord(i).first;
+        int x = getCord(i).first - EDGE_SIZE;
         int y = getCord(i).second - START_Y;
-        printf("now:%d %d\n",(x/EDGE_SIZE)-1, y/EDGE_SIZE);
+        printf("now:%d %d\n",(x/EDGE_SIZE), y/EDGE_SIZE);
     }
 }

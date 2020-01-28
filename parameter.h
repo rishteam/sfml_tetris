@@ -2,12 +2,12 @@
 
 #define EDGE_SIZE 40
 #define START_X 240
-#define START_Y 80
+#define START_Y 40
 #define LEFT_LIMIT 40
 #define RIGHT_LIMIT 520
 #define TOTAL_X 13
-#define TOTAL_Y 16
-#define BOTTOM_LIMIT 720
+#define TOTAL_Y 19
+#define BOTTOM_LIMIT 800
 
 static int Counter = 0;
 static int pixel_unit[8][2] =

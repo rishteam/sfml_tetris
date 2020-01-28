@@ -6,6 +6,16 @@
 #include "canvas.h"
 #include "pixel.h"
 
+void pixel_init(Pixel *pixel)
+{
+    pixel->init();
+    srand(time(NULL));
+    int color_idx = rand() % 8;
+    srand(time(NULL));
+    int type_idx = rand() % 7;
+    pixel->setColorWithType(color[color_idx], type[type_idx]);
+}
+
 int main()
 {
     // Create the main window
@@ -13,10 +23,8 @@ int main()
     Canvas canvas;
     sf::Clock clock;
     Pixel pixel;
-    float timer = 0, delay = 0.3;
-    pixel.init();
-    pixel.setColorWithType("Gray", "Z");
-
+    float timer = 0, delay = 0.4;
+    pixel_init(&pixel);
 
     while (window.isOpen())
     {
@@ -43,33 +51,34 @@ int main()
                 else if (event.key.code == sf::Keyboard::Up)
                     pixel.rotate();
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) delay = 0.05;
 
         // time handler
         if (timer > delay)
         {
             pixel.recordState();
-            pixel.drop(), timer = 0;
+            pixel.drop();
             pixel.updateRealCoordinate();
             if (!pixel.check_x())
             {
                 pixel.releaseState();
             }
-            else if(!pixel.check_y() || !canvas.collision(pixel))
+            if(!pixel.check_y() || !canvas.collision(pixel))
             {
                 pixel.releaseState();
-                canvas.putCanvas(pixel);
-                // pixel.debug();
-                // canvas.debug();
+                if (!canvas.collision(pixel))
+                    canvas.clear();
+                else
+                    canvas.putCanvas(pixel);
                 //clear state
-                pixel.init();
-                srand(time(NULL));
-                int color_idx = rand() % 8;
-                srand(time(NULL));
-                int type_idx = rand() % 7;
-                pixel.setColorWithType(color[color_idx], type[type_idx]);
+                pixel_init(&pixel);
             }
+            timer = 0;
         }
+
+        delay = 0.4;
         window.clear(sf::Color::White);
+        canvas.clearLine();
         canvas.setCanvas(&window);
         canvas.drawExist(&window);
         canvas.drawPixel(pixel, &window);

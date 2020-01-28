@@ -43,14 +43,49 @@ bool Canvas::collision(Pixel pixel)
     return true;
 }
 
+// bool Canvas::isfull(Pixel pixel)
+// {
+//     for(int i = 0; i < 4; i++)
+//     {
+//         int x = (pixel.getCord(i).first - EDGE_SIZE) / EDGE_SIZE;
+//         int y = (pixel.getCord(i).second - START_Y) / EDGE_SIZE;
+//         printf("full:%d %d\n",x, y);
+//         if (x > TOTAL_X || x < 0)
+//             return true;
+//         if (y > TOTAL_Y || y < 0)
+//             return true;
+//     }
+//     return false;
+// }
+
+void Canvas::clear()
+{
+    memset(field,0,sizeof(field));
+}
+
+void Canvas::clearLine()
+{
+    int k = TOTAL_Y-1;
+    for (int i = TOTAL_Y - 1; i > 0; i--)
+    {
+        int count = 0;
+        for (int j = 0; j < TOTAL_X; j++)
+        {
+            if (field[j][i])
+                count++;
+            field[j][k] = field[j][i];
+        }
+        if (count < TOTAL_X)
+            k--;
+    }
+}
+
 void Canvas::putCanvas(Pixel pixel)
 {
     for (int i = 0; i < 4; i++)
     {
         int x = pixel.getCord(i).first - EDGE_SIZE;
         int y = pixel.getCord(i).second - START_Y;
-        // printf("x:%d y:%d\n", x / EDGE_SIZE, y / EDGE_SIZE);
-        // printf("%d\n",pixel.searchColorIndex());
         field[x / EDGE_SIZE][y / EDGE_SIZE] = pixel.searchColorIndex();
     }
 }
@@ -72,18 +107,18 @@ void Canvas::drawExist(sf::RenderWindow *window)
                 window->draw(tiles);
             }
         }
-    }
+}
 
-    void Canvas::drawPixel(Pixel pixel, sf::RenderWindow *window)
+void Canvas::drawPixel(Pixel pixel, sf::RenderWindow *window)
+{
+    sf::Sprite tiles(t1);
+    for (int i = 0; i < 4; i++)
     {
-        sf::Sprite tiles(t1);
-        for (int i = 0; i < 4; i++)
-        {
-            tiles.setTextureRect(sf::IntRect(pixel.getColor().first, pixel.getColor().second, 8, 8));
-            tiles.setPosition(pixel.getCord(i).first, pixel.getCord(i).second);
-            tiles.setScale(5.f, 5.f);
-            window->draw(tiles);
-        }
+        tiles.setTextureRect(sf::IntRect(pixel.getColor().first, pixel.getColor().second, 8, 8));
+        tiles.setPosition(pixel.getCord(i).first, pixel.getCord(i).second);
+        tiles.setScale(5.f, 5.f);
+        window->draw(tiles);
+    }
 }
 
 void Canvas::debug()
