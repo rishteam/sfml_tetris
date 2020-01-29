@@ -10,8 +10,9 @@
 #define BOTTOM_LIMIT 800
 
 static int Counter = 0;
-static int pixel_unit[8][2] =
+static int pixel_unit[9][2] =
     {
+        -1, -1,
         0, 0,
         8, 0,
         16, 0,
@@ -39,5 +40,5 @@ static int figures[7][4] =
         2, 3, 4, 5, // O
 };
 
-static std::string color[8] = {"Blue", "Green", "Red", "Purple", "Garbage", "Brown", "Yellow", "Gray"};
+static std::string color[9] = {"", "Blue", "Green", "Red", "Purple", "Garbage", "Brown", "Yellow", "Gray"};
 static std::string type[7] = {"I", "Z", "S", "T", "L", "J", "O"};

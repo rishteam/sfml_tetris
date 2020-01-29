@@ -43,21 +43,6 @@ bool Canvas::collision(Pixel pixel)
     return true;
 }
 
-// bool Canvas::isfull(Pixel pixel)
-// {
-//     for(int i = 0; i < 4; i++)
-//     {
-//         int x = (pixel.getCord(i).first - EDGE_SIZE) / EDGE_SIZE;
-//         int y = (pixel.getCord(i).second - START_Y) / EDGE_SIZE;
-//         printf("full:%d %d\n",x, y);
-//         if (x > TOTAL_X || x < 0)
-//             return true;
-//         if (y > TOTAL_Y || y < 0)
-//             return true;
-//     }
-//     return false;
-// }
-
 void Canvas::clear()
 {
     memset(field,0,sizeof(field));
@@ -82,6 +67,8 @@ void Canvas::clearLine()
 
 void Canvas::putCanvas(Pixel pixel)
 {
+    printf("%d\n",pixel.searchColorIndex());
+    printf("%d %d\n", pixel.getColor().first, pixel.getColor().second);
     for (int i = 0; i < 4; i++)
     {
         int x = pixel.getCord(i).first - EDGE_SIZE;

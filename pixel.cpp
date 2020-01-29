@@ -16,12 +16,13 @@ void Pixel::init()
 
 void Pixel::setColorWithType(std::string setcolor, std::string settype)
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 9; i++)
     {
         if (color[i] == setcolor)
         {
             color_x = pixel_unit[i][0];
             color_y = pixel_unit[i][1];
+            printf("set:%d %d\n",color_x,color_y);
         }
     }
 
@@ -130,7 +131,7 @@ std::pair<int, int> Pixel::getColor()
 
 int Pixel::searchColorIndex()
 {
-    for(int i = 0; i < 8; i++)
+    for(int i = 0; i < 9; i++)
     {
         if (color_x == pixel_unit[i][0] && color_y == pixel_unit[i][1])
             return i;
@@ -144,6 +145,6 @@ void Pixel::debug()
     {
         int x = getCord(i).first - EDGE_SIZE;
         int y = getCord(i).second - START_Y;
-        printf("now:%d %d\n",(x/EDGE_SIZE), y/EDGE_SIZE);
+        printf("Pixelnow:%d %d\n",(x/EDGE_SIZE), y/EDGE_SIZE);
     }
 }

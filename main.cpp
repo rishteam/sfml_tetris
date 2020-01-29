@@ -10,7 +10,7 @@ void pixel_init(Pixel *pixel)
 {
     pixel->init();
     srand(time(NULL));
-    int color_idx = rand() % 8;
+    int color_idx = rand() % 8 + 1;
     srand(time(NULL));
     int type_idx = rand() % 7;
     pixel->setColorWithType(color[color_idx], type[type_idx]);
@@ -23,7 +23,7 @@ int main()
     Canvas canvas;
     sf::Clock clock;
     Pixel pixel;
-    float timer = 0, delay = 0.4;
+    float timer = 0, delay = 0.2;
     pixel_init(&pixel);
 
     while (window.isOpen())
@@ -63,14 +63,15 @@ int main()
             {
                 pixel.releaseState();
             }
-            if(!pixel.check_y() || !canvas.collision(pixel))
+            if (!pixel.check_y() || !canvas.collision(pixel))
             {
                 pixel.releaseState();
                 if (!canvas.collision(pixel))
                     canvas.clear();
                 else
+                {
                     canvas.putCanvas(pixel);
-                //clear state
+                }
                 pixel_init(&pixel);
             }
             timer = 0;
