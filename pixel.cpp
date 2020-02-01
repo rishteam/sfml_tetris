@@ -22,7 +22,6 @@ void Pixel::setColorWithType(std::string setcolor, std::string settype)
         {
             color_x = pixel_unit[i][0];
             color_y = pixel_unit[i][1];
-            printf("set:%d %d\n",color_x,color_y);
         }
     }
 
@@ -33,8 +32,17 @@ void Pixel::setColorWithType(std::string setcolor, std::string settype)
 
     for (int i = 0; i < 4; i++)
     {
-        Cord[i][0] = (figure[i] % 2) * EDGE_SIZE + START_X;
-        Cord[i][1] = (figure[i] / 2) * EDGE_SIZE + START_Y;
+        if (settype == "I")
+        {
+            //prevent the out of the edge
+            Cord[i][0] = (figure[i] % 2) * EDGE_SIZE + START_X;
+            Cord[i][1] = (figure[i] / 2) * EDGE_SIZE + START_Y + EDGE_SIZE;
+        }
+        else
+        {
+            Cord[i][0] = (figure[i] % 2) * EDGE_SIZE + START_X;
+            Cord[i][1] = (figure[i] / 2) * EDGE_SIZE + START_Y;
+        }
     }
 }
 

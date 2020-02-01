@@ -13,13 +13,15 @@ Canvas::Canvas()
     // img: https://opengameart.org/art-search?keys=tetris
     t1.loadFromFile("./src/img/8_bit_tetris_pixel.png");
     t2.loadFromFile("./src/img/back.png");
+    t3.loadFromFile("./src/img/quit.png");
+    t4.loadFromFile("./src/img/retry.png");
     memset(field,0,sizeof(field));
 }
 
 void Canvas::setCanvas(sf::RenderWindow *window)
 {
     sf::Sprite background(t2);
-    background.setScale(600 / background.getLocalBounds().width, 800 / background.getLocalBounds().height);
+    background.setScale(480 / background.getLocalBounds().width, 800 / background.getLocalBounds().height);
     window->draw(background);
 }
 
@@ -48,9 +50,10 @@ void Canvas::clear()
     memset(field,0,sizeof(field));
 }
 
-void Canvas::clearLine()
+int Canvas::clearLine()
 {
     int k = TOTAL_Y-1;
+    int score_add = 0;
     for (int i = TOTAL_Y - 1; i > 0; i--)
     {
         int count = 0;
@@ -62,13 +65,14 @@ void Canvas::clearLine()
         }
         if (count < TOTAL_X)
             k--;
+        else
+            score_add += 1;
     }
+    return score_add;
 }
 
 void Canvas::putCanvas(Pixel pixel)
 {
-    printf("%d\n",pixel.searchColorIndex());
-    printf("%d %d\n", pixel.getColor().first, pixel.getColor().second);
     for (int i = 0; i < 4; i++)
     {
         int x = pixel.getCord(i).first - EDGE_SIZE;
@@ -108,6 +112,74 @@ void Canvas::drawPixel(Pixel pixel, sf::RenderWindow *window)
     }
 }
 
+void Canvas::drawScore(int score, sf::RenderWindow *window)
+{
+    sf::Font font;
+    if (font.loadFromFile("./src/font/slkscr.ttf"))
+    {
+        sf::Text text;
+        text.setFont(font);
+        text.setString("Score: " + std::to_string(score));
+        text.setCharacterSize(36);
+        text.setFillColor(sf::Color::Black);
+        text.setPosition(SCORE_POS_X, SCORE_POS_Y);
+        window->draw(text);
+    }
+}
+
+void Canvas::drawHp(int hp, sf::RenderWindow *window)
+{
+    sf::Sprite FullBlood(t1), LoseBlood(t1);
+    FullBlood.setTextureRect(sf::IntRect(40, 0, 8, 8));
+    LoseBlood.setTextureRect(sf::IntRect(40, 8, 8, 8));
+
+    for(int i = 0; i < hp; i++)
+    {
+        FullBlood.setPosition(BLOOD_POS_X + i * EDGE_SIZE, BLOOD_POS_Y);
+        FullBlood.setScale(5.f, 5.f);
+        window->draw(FullBlood);
+    }
+    for (int i = hp; i < FULL_HP; i++)
+    {
+        LoseBlood.setPosition(BLOOD_POS_X + i * EDGE_SIZE, BLOOD_POS_Y);
+        LoseBlood.setScale(5.f, 5.f);
+        window->draw(LoseBlood);
+    }
+}
+
+void Canvas::drawGameOver(int score, sf::RenderWindow *window)
+{
+    sf::Font font;
+    sf::Sprite quit(t3), retry(t4);
+    //text gameover, score
+    if (font.loadFromFile("./src/font/slkscr.ttf"))
+    {
+        sf::Text text, text2;
+        text.setFont(font);
+        text2.setFont(font);
+        text.setString("GAME_OVER");
+        text2.setString("score:" + std::to_string(score));
+        text.setCharacterSize(60);
+        text2.setCharacterSize(60);
+        text.setFillColor(sf::Color::Red);
+        text2.setFillColor(sf::Color::Green);
+        text.setPosition(50, 200);
+        if(score >= 100)
+            text2.setPosition(75, 300);
+        else
+            text2.setPosition(100, 300);
+        window->draw(text);
+        window->draw(text2);
+    }
+
+    retry.setPosition(125, 400);
+    quit.setPosition(125, 550);
+    retry.setScale(.25f, .25f);
+    quit.setScale(.25f, .25f);
+    window->draw(retry);
+    window->draw(quit);
+}
+
 void Canvas::debug()
 {
     for (int i = 0; i < TOTAL_Y; i++)
@@ -120,3 +192,7 @@ void Canvas::debug()
     }
     printf("----------\n");
 }
+
+//TODO: SCORE
+//TODO: HEART
+//FIXME: pixel floating
