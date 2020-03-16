@@ -11,10 +11,10 @@ Canvas::Canvas()
 {
     // Load a sprite to display
     // img: https://opengameart.org/art-search?keys=tetris
-    t1.loadFromFile("./src/img/8_bit_tetris_pixel.png");
-    t2.loadFromFile("./src/img/back.png");
-    t3.loadFromFile("./src/img/quit.png");
-    t4.loadFromFile("./src/img/retry.png");
+    t1.loadFromFile("./img/8_bit_tetris_pixel.png");
+    t2.loadFromFile("./img/back.png");
+    t3.loadFromFile("./img/quit.png");
+    t4.loadFromFile("./img/retry.png");
     memset(field,0,sizeof(field));
 }
 
@@ -115,7 +115,7 @@ void Canvas::drawPixel(Pixel pixel, sf::RenderWindow *window)
 void Canvas::drawScore(int score, sf::RenderWindow *window)
 {
     sf::Font font;
-    if (font.loadFromFile("./src/font/slkscr.ttf"))
+    if (font.loadFromFile("./font/slkscr.ttf"))
     {
         sf::Text text;
         text.setFont(font);
@@ -152,7 +152,7 @@ void Canvas::drawGameOver(int score, sf::RenderWindow *window)
     sf::Font font;
     sf::Sprite quit(t3), retry(t4);
     //text gameover, score
-    if (font.loadFromFile("./src/font/slkscr.ttf"))
+    if (font.loadFromFile("./font/slkscr.ttf"))
     {
         sf::Text text, text2;
         text.setFont(font);
@@ -193,6 +193,4 @@ void Canvas::debug()
     printf("----------\n");
 }
 
-//TODO: SCORE
-//TODO: HEART
 //FIXME: pixel floating

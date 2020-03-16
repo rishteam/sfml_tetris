@@ -1,0 +1,3 @@
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/build/CMakeFiles/sfml_tetris.dir
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/build/CMakeFiles/rebuild_cache.dir
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/build/CMakeFiles/edit_cache.dir

@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../inc/canvas.h
+iostream
+-
+SFML/Audio.hpp
+-
+SFML/Graphics.hpp
+-
+pixel.h
+../inc/pixel.h
+
+../inc/parameter.h
+
+../inc/pixel.h
+iostream
+-
+SFML/Audio.hpp
+-
+SFML/Graphics.hpp
+-
+parameter.h
+../inc/parameter.h
+
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/src/canvas.cpp
+iostream
+-
+cstring
+-
+SFML/Audio.hpp
+-
+SFML/Graphics.hpp
+-
+parameter.h
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/src/parameter.h
+canvas.h
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/src/canvas.h
+pixel.h
+C:/Users/Sandy/Desktop/code/final_project/sfml_tetris/src/pixel.h
+
